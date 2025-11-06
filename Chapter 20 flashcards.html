@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 20 Flashcards - 31 Questions</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            height: 95vh;
+            max-height: 95vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path d="M30,30 Q50,10 70,30 T90,50 T70,70 T50,90 T30,70 T10,50 T30,30 Z" fill="white"/></svg>');
+        }
+        
+        .header h1 {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .header .subtitle {
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .progress {
+            background: #34495e;
+            height: 8px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .flashcard {
+            padding: clamp(10px, 3vw, 20px);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f8f9fa;
+            overflow-y: auto;
+        }
+        
+        .question-container {
+            display: flex;
+            gap: clamp(10px, 2vw, 15px);
+            align-items: flex-start;
+            margin-bottom: clamp(10px, 2vw, 15px);
+        }
+        
+        .question-icon {
+            background: #3498db;
+            color: white;
+            width: clamp(35px, 8vw, 50px);
+            height: clamp(35px, 8vw, 50px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: bold;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .question {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            line-height: 1.6;
+            color: #2c3e50;
+            flex-grow: 1;
+            font-weight: 500;
+        }
+        
+        .image-container {
+            margin: clamp(8px, 2vw, 15px) 0;
+            text-align: center;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            max-height: clamp(120px, 20vh, 180px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecf0f1;
+        }
+        
+        .concept-image {
+            max-width: 100%;
+            max-height: clamp(110px, 18vh, 160px);
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .hint-container {
+            margin: clamp(8px, 2vw, 15px) 0;
+            text-align: center;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(6px, 1.5vw, 10px);
+            margin-bottom: clamp(10px, 2vw, 20px);
+            flex: 1;
+        }
+        
+        .option {
+            padding: clamp(10px, 2vw, 14px) clamp(12px, 2.5vw, 18px);
+            border: 2px solid #bdc3c7;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 1.5vw, 10px);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+            border-color: #95a5a6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .option-letter {
+            background: #ecf0f1;
+            color: #2c3e50;
+            width: clamp(24px, 5vw, 28px);
+            height: clamp(24px, 5vw, 28px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            font-size: clamp(0.75rem, 1.8vw, 0.9rem);
+        }
+        
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .option.correct .option-letter {
+            background: #28a745;
+            color: white;
+        }
+        
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .option.incorrect .option-letter {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .feedback {
+            padding: clamp(12px, 2.5vw, 16px);
+            border-radius: 12px;
+            margin-bottom: clamp(10px, 2vw, 16px);
+            display: none;
+            align-items: center;
+            gap: clamp(8px, 1.5vw, 12px);
+            font-weight: 500;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+            display: flex;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+            display: flex;
+        }
+        
+        .feedback-icon {
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            flex-shrink: 0;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(12px, 2.5vw, 16px) clamp(16px, 3vw, 24px);
+            background: #ecf0f1;
+            border-top: 1px solid #bdc3c7;
+            flex-shrink: 0;
+        }
+        
+        .counter {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .btn {
+            padding: clamp(10px, 2vw, 12px) clamp(15px, 2.5vw, 20px);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: clamp(6px, 1vw, 8px);
+            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(149, 165, 166, 0.3);
+        }
+        
+        .btn-hint {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            color: white;
+            padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 16px);
+            font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+        }
+        
+        .btn-hint:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 193, 7, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .rationale {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffd43b;
+            border-radius: 12px;
+            padding: clamp(12px, 2.5vw, 16px);
+            margin-top: clamp(8px, 1.5vw, 12px);
+            display: none;
+        }
+        
+        .rationale.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .rationale h4 {
+            color: #856404;
+            margin-bottom: clamp(6px, 1.2vw, 10px);
+            display: flex;
+            align-items: center;
+            gap: clamp(6px, 1.2vw, 8px);
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+        }
+        
+        .rationale p {
+            color: #856404;
+            line-height: 1.6;
+            font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+        }
+        
+        .hint {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px dashed #2196f3;
+            border-radius: 12px;
+            padding: clamp(12px, 2.5vw, 16px);
+            margin-top: clamp(6px, 1.2vw, 10px);
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .hint.show {
+            display: block;
+        }
+        
+        .hint h4 {
+            color: #1565c0;
+            margin-bottom: clamp(6px, 1.2vw, 8px);
+            display: flex;
+            align-items: center;
+            gap: clamp(5px, 1vw, 6px);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .hint p {
+            color: #1565c0;
+            line-height: 1.5;
+            font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+            font-style: italic;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stats {
+            display: flex;
+            gap: clamp(8px, 1.5vw, 15px);
+            justify-content: center;
+            margin-top: clamp(4px, 1vw, 10px);
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: clamp(5px, 1vw, 6px) clamp(8px, 1.8vw, 12px);
+            border-radius: 20px;
+            font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+            white-space: nowrap;
+        }
+        
+        /* Cancel selection button */
+        .cancel-selection {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            margin: 0 auto clamp(10px, 2vw, 15px) auto;
+            display: none;
+        }
+        
+        .cancel-selection:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 107, 107, 0.3);
+        }
+        
+        .cancel-selection.show {
+            display: flex;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 15px;
+            }
+            
+            .question-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+            
+            .question-icon {
+                align-self: center;
+            }
+            
+            .navigation {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                flex: 1;
+                justify-content: center;
+                min-width: 120px;
+            }
+            
+            .counter {
+                order: -1;
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .flashcard {
+                padding: 8px;
+            }
+            
+            .navigation {
+                padding: 10px 12px;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                min-width: 100px;
+            }
+            
+            .options {
+                gap: 5px;
+            }
+            
+            .option {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Very small screens */
+        @media (max-width: 320px) {
+            .header h1 {
+                font-size: 1.1rem;
+            }
+            
+            .header .subtitle {
+                font-size: 0.75rem;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+                min-width: 80px;
+            }
+        }
+        
+        /* Large screens optimization */
+        @media (min-width: 1400px) {
+            .container {
+                max-height: 1000px;
+            }
+            
+            .flashcard {
+                padding: 25px;
+            }
+        }
+        
+        /* Tall screens */
+        @media (min-height: 1000px) {
+            .flashcard {
+                padding: 25px;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            .option {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Short screens */
+        @media (max-height: 600px) {
+            .header {
+                padding: 10px;
+            }
+            
+            .flashcard {
+                padding: 8px;
+            }
+            
+            .question-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            .question {
+                font-size: 0.9rem;
+            }
+            
+            .image-container {
+                max-height: 100px;
+            }
+            
+            .concept-image {
+                max-height: 90px;
+            }
+            
+            .options {
+                gap: 5px;
+            }
+            
+            .option {
+                padding: 6px 8px;
+                font-size: 0.8rem;
+            }
+            
+            .option-letter {
+                width: 20px;
+                height: 20px;
+                font-size: 0.7rem;
+            }
+            
+            .navigation {
+                padding: 8px 10px;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Chapter 20 Flashcards</h1>
+            <div class="subtitle">Nursing Management of Pregnancy at Risk: Selected Health Conditions and Vulnerable Populations - 31 Questions</div>
+            <div class="stats">
+                <div class="stat">🎯 31 Questions</div>
+                <div class="stat">💡 Hint Feature</div>
+                <div class="stat">📖 Visual Learning</div>
+                <div class="stat">↩️ Cancel Wrong Answers</div>
+            </div>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question-container">
+                <div class="question-icon">?</div>
+                <div class="question" id="question"></div>
+            </div>
+            <div class="image-container" id="imageContainer">
+                <img class="concept-image" id="conceptImage" alt="Educational illustration">
+            </div>
+            
+            <div class="hint-container">
+                <button class="btn btn-hint" id="hintBtn" onclick="showHint()">
+                    💡 Show Hint
+                </button>
+                <div class="hint" id="hint">
+                    <h4>💡 Study Tip:</h4>
+                    <p id="hintText"></p>
+                </div>
+            </div>
+            
+            <div class="options" id="options"></div>
+            
+            <!-- Cancel Selection Button - Only shows for wrong answers -->
+            <button class="btn cancel-selection" id="cancelBtn" onclick="cancelSelection()">
+                ↩️ Cancel Selection
+            </button>
+            
+            <div class="feedback" id="feedback">
+                <div class="feedback-icon" id="feedbackIcon"></div>
+                <div id="feedbackText"></div>
+            </div>
+            <div class="rationale" id="rationale">
+                <h4>💡 Rationale:</h4>
+                <p id="rationaleText"></p>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousCard()">
+                ⬅️ Previous
+            </button>
+            <div class="counter" id="counter">1/31</div>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextCard()">
+                Next ➡️
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const medicalImages = {
+            'diabetes_pregnancy': 'https://images.unsplash.com/photo-1576097449797-4c9a9ed56d6a?w=400&h=200&fit=crop',
+            'hba1c': 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400&h=200&fit=crop',
+            'hiv_pregnancy': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'substance_use': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'low_birthweight': 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=200&fit=crop',
+            'chronic_hypertension': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'asthma_pregnancy': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'iron_deficiency': 'https://images.unsplash.com/photo-1576097449797-4c9a9ed56d6a?w=400&h=200&fit=crop',
+            'fetal_alcohol': 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=200&fit=crop',
+            'older_pregnancy': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'stis_pregnancy': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'cmv_infection': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'caffeine_pregnancy': 'https://images.unsplash.com/photo-1576097449797-4c9a9ed56d6a?w=400&h=200&fit=crop',
+            'neonatal_withdrawal': 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=200&fit=crop',
+            'adolescent_pregnancy': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'rheumatoid_arthritis': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'handwashing': 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=400&h=200&fit=crop',
+            'hepatitis_b': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'iron_foods': 'https://images.unsplash.com/photo-1576097449797-4c9a9ed56d6a?w=400&h=200&fit=crop',
+            'glucose_control': 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400&h=200&fit=crop',
+            'gbs_screening': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'lupus_pregnancy': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'toxoplasmosis': 'https://images.unsplash.com/photo-1576097449797-4c9a9ed56d6a?w=400&h=200&fit=crop',
+            'iron_supplement': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'lab_results': 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400&h=200&fit=crop',
+            'varicella_vaccine': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'sle_medications': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'cardiac_pregnancy': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'hypertension_monitoring': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop'
+        };
+
+        const questions = [
+            {
+                question: "The nurse is teaching a pregnant woman with type 1 diabetes about her diet during pregnancy. Which client statement indicates that the nurse's teaching was successful?",
+                options: [
+                    "\"I'll basically follow the same diet that I was following before I became pregnant.\"",
+                    "\"Because I need extra protein, I'll have to increase my intake of milk and meat.\"",
+                    "\"Pregnancy affects insulin production, so I'll need to make adjustments in my diet.\"",
+                    "\"I'll adjust my diet and insulin based on the results of my urine tests for glucose.\""
+                ],
+                correct: 2,
+                rationale: "In pregnancy, placental hormones cause insulin resistance at a level that tends to parallel growth of the fetoplacental unit. Nutritional management focuses on maintaining balanced glucose levels. Thus, the woman will probably need to make adjustments in her diet. Protein needs increase during pregnancy, but this is unrelated to diabetes. Blood glucose monitoring results typically guide therapy.",
+                image: 'diabetes_pregnancy',
+                hint: "Think about how pregnancy affects insulin resistance and glucose metabolism."
+            },
+            {
+                question: "A pregnant woman with diabetes at 10 weeks' gestation has a glycosylated hemoglobin (HbA1c) level of 13%. At this time the nurse should be most concerned about which possible fetal outcome?",
+                options: [
+                    "congenital anomalies",
+                    "incompetent cervix",
+                    "placenta previa",
+                    "placental abruption (abruptio placentae)"
+                ],
+                correct: 0,
+                rationale: "A HbA1c level of 13% indicates poor glucose control. This, in conjunction with the woman being in the first trimester, increases the risk for congenital anomalies in the fetus. Elevated glucose levels are not associated with incompetent cervix, placenta previa, or placental abruption (abruptio placentae).",
+                image: 'hba1c',
+                hint: "Poor glucose control in early pregnancy is particularly concerning for fetal development."
+            },
+            {
+                question: "A nurse is conducting a review class for a group of perinatal nurses working at the local clinic. The clinic sees a high population of women who are HIV positive. After discussing the recommendations for antiretroviral therapy with the group, the nurse determines that the teaching was successful when the group identifies which rationale as the underlying principle for the therapy?",
+                options: [
+                    "reduction in viral loads in the blood",
+                    "treatment of opportunistic infections",
+                    "adjunct therapy to radiation and chemotherapy",
+                    "can cure acute HIV/AIDS infections"
+                ],
+                correct: 0,
+                rationale: "Drug therapy is the mainstay of treatment and is important in reducing the viral load as much as possible. Antiretroviral agents do not treat opportunistic infections and are not adjunctive therapy. There is no cure for HIV/AIDS.",
+                image: 'hiv_pregnancy',
+                hint: "Antiretroviral therapy aims to reduce the amount of virus in the body."
+            },
+            {
+                question: "Assessment of a pregnant woman and her fetus reveals tachycardia and hypertension. There is also evidence suggesting vasoconstriction. The nurse would question the woman about use of which substance?",
+                options: [
+                    "marijuana",
+                    "alcohol",
+                    "heroin",
+                    "cocaine"
+                ],
+                correct: 3,
+                rationale: "Cocaine use produces vasoconstriction, tachycardia, and hypertension in both the mother and fetus. The effects of marijuana are not yet fully understood. Alcohol ingestion would lead to cognitive and behavioral problems in the newborn. Heroin is a central nervous system depressant.",
+                image: 'substance_use',
+                hint: "This substance is a stimulant that causes cardiovascular effects."
+            },
+            {
+                question: "When teaching a class of pregnant women about the effects of substance use during pregnancy, the nurse would include which effect?",
+                options: [
+                    "low-birthweight infants",
+                    "excessive weight gain",
+                    "higher pain tolerance",
+                    "longer gestational periods"
+                ],
+                correct: 0,
+                rationale: "Substance use during pregnancy is associated with low birth weight infants, preterm labor, abortion, intrauterine growth restriction, abruptio placentae, neurobehavioral abnormalities, and long-term childhood developmental consequences. Excessive weight gain, higher pain tolerance, and longer gestational periods are not associated with substance use.",
+                image: 'low_birthweight',
+                hint: "Substance use often leads to poor fetal growth outcomes."
+            },
+            {
+                question: "A client who is HIV-positive is in her second trimester and remains asymptomatic. She voices concern about her newborn's risk for the infection. Which statement by the nurse would be most appropriate?",
+                options: [
+                    "\"You'll probably have a cesarean birth to prevent exposing your newborn.\"",
+                    "\"Antibodies cross the placenta and provide immunity to the newborn.\"",
+                    "\"Wait until after the infant is born, and then something can be done.\"",
+                    "\"Antiretroviral medications are available to help reduce the risk of transmission.\""
+                ],
+                correct: 3,
+                rationale: "Drug therapy is the mainstay of treatment for pregnant women infected with HIV. The goal of therapy is to reduce the viral load as much as possible; this reduces the risk of transmission to the fetus. Decisions about the method of birth should be based on the woman's viral load, duration of ruptured membranes, progress of labor, and other pertinent clinical factors. The newborn is at risk for HIV because of potential perinatal transmission. Waiting until after the infant is born may be too late.",
+                image: 'hiv_pregnancy',
+                hint: "Medications can significantly reduce the risk of mother-to-child transmission."
+            },
+            {
+                question: "When preparing a schedule of follow-up visits for a pregnant woman with chronic hypertension, which schedule would be most appropriate?",
+                options: [
+                    "monthly visits until 32 weeks, then bi-monthly visits",
+                    "bi-monthly visits until 28 weeks, then weekly visits",
+                    "monthly visits until 20 weeks, then bi-monthly visits",
+                    "bi-monthly visits until 36 weeks, then weekly visits"
+                ],
+                correct: 1,
+                rationale: "For the woman with chronic hypertension, antepartum visits typically occur every 2 weeks until 28 weeks' gestation and then weekly to allow for frequent maternal and fetal surveillance.",
+                image: 'chronic_hypertension',
+                hint: "High-risk pregnancies require more frequent monitoring as gestation progresses."
+            },
+            {
+                question: "A woman with a history of asthma comes to the clinic for evaluation for pregnancy. The woman's pregnancy test is positive. When reviewing the woman's medication therapy regimen for asthma, which medication would the nurse identify as problematic for the woman now that she is pregnant?",
+                options: [
+                    "ipratropium",
+                    "albuterol",
+                    "salmeterol",
+                    "Prednisone"
+                ],
+                correct: 3,
+                rationale: "Oral corticosteroids such as prednisone are not preferred for the long-term treatment of asthma during pregnancy. Inhaled steroids are the choice for maintenance medications to reduce inflammation that leads to bronchospasm. Common ones prescribed include beclomethasone and salmeterol. Rescue agents such as albuterol or ipratropium provide immediate symptomatic relief by reducing acute bronchospasm.",
+                image: 'asthma_pregnancy',
+                hint: "Oral steroids have more systemic effects than inhaled medications."
+            },
+            {
+                question: "A pregnant woman is diagnosed with iron-deficiency anemia and is prescribed an iron supplement. After teaching her about her prescribed iron supplement, which statement indicates successful teaching?",
+                options: [
+                    "\"I should take my iron with milk.\"",
+                    "\"I should avoid drinking orange juice.\"",
+                    "\"I need to eat foods high in fiber.\"",
+                    "\"I'll call the primary care provider if my stool is black and tarry.\""
+                ],
+                correct: 2,
+                rationale: "Iron supplements can lead to constipation, so the woman needs to increase her intake of fluids and high-fiber foods. Milk inhibits absorption and should be discouraged. Vitamin C-containing fluids such as orange juice are encouraged because they promote absorption. Ideally the woman should take the iron on an empty stomach to improve absorption, but many women cannot tolerate the gastrointestinal discomfort it causes. In such cases, the woman should take it with meals. Iron typically causes the stool to become black and tarry; there is no need for the woman to notify her primary care provider.",
+                image: 'iron_deficiency',
+                hint: "Iron supplements commonly cause gastrointestinal side effects that need management."
+            },
+            {
+                question: "The nurse is assessing a newborn of a woman who is suspected of abusing alcohol. Which newborn finding would provide additional evidence to support this suspicion?",
+                options: [
+                    "wide, large eyes",
+                    "thin upper lip",
+                    "protruding jaw",
+                    "elongated nose"
+                ],
+                correct: 1,
+                rationale: "Newborn characteristics suggesting fetal alcohol spectrum disorder include thin upper lip, small head circumference, small eyes, receding jaw, and short nose. Other features include a low nasal bridge, short palpebral fissures, flat midface, epicanthal folds, and minor ear abnormalities.",
+                image: 'fetal_alcohol',
+                hint: "Look for characteristic facial features associated with fetal alcohol syndrome."
+            },
+            {
+                question: "After teaching a group of nurses working at the women's health clinic about the impact of pregnancy on the older woman, which statement by the group indicates that the teaching was successful?",
+                options: [
+                    "\"The majority of women who become pregnant over age 35 experience complications.\"",
+                    "\"Women over the age of 35 who become pregnant require a specialized type of assessment.\"",
+                    "\"Women over age 35 and are pregnant have an increased risk for spontaneous abortions.\"",
+                    "\"Women over age 35 are more likely to have a substance use disorder.\""
+                ],
+                correct: 2,
+                rationale: "Whether childbearing is delayed by choice or by chance, women starting a family at age 35 or older are not doing so without risk. Women in this age group may already have chronic health conditions that can put the pregnancy at risk. In addition, numerous studies have shown that increasing maternal age is a risk factor for infertility and spontaneous abortions, gestational diabetes, chronic hypertension, postpartum hemorrhage, preeclampsia, preterm labor and birth, multiple pregnancy, genetic disorders and chromosomal abnormalities, placenta previa, fetal growth restriction, low Apgar scores, and surgical births (Dillion et al. 2019). However, even though increased age implies increased complications, most women today who become pregnant after age 34, have healthy pregnancies and healthy newborns. Nursing assessment of the pregnant woman over age 35 is the same as that for any pregnant woman. Women of this age have the same risk for a substance use disorder as any other age group.",
+                image: 'older_pregnancy',
+                hint: "Advanced maternal age is associated with specific pregnancy risks."
+            },
+            {
+                question: "A nurse is conducting an in-service presentation to a group of perinatal nurses about sexually transmitted infections and their effect on pregnancy. The nurse determines that the teaching was successful when the group identifies which infection as being responsible for ophthalmia neonatorum?",
+                options: [
+                    "syphilis",
+                    "gonorrhea",
+                    "chlamydia",
+                    "HPV"
+                ],
+                correct: 1,
+                rationale: "Infection with gonorrhea during pregnancy can cause ophthalmia neonatorum in the newborn from birth through an infected birth canal. Infection with syphilis can cause congenital syphilis in the neonate. Infection with chlamydia can lead to conjunctivitis or pneumonia in the newborn. Exposure to HPV during birth is associated with laryngeal papillomas.",
+                image: 'stis_pregnancy',
+                hint: "This STI can cause serious eye infection in newborns."
+            },
+            {
+                question: "A nurse is preparing a presentation for a group of young adult pregnant women about common infections and their effect on pregnancy. When describing the infections, which infection would the nurse include as the most common congenital and perinatal viral infection in the world?",
+                options: [
+                    "rubella",
+                    "hepatitis B",
+                    "cytomegalovirus",
+                    "parvovirus B19"
+                ],
+                correct: 2,
+                rationale: "Although rubella, hepatitis B, and parovirus B19 can affect pregnant women and their fetuses, cytomegalovirus (CMV) is the most common congenital and perinatal viral infection in the world. CMV is the leading cause of congenital infection, with morbidity and mortality at birth and sequelae. Each year approximately 1% to 7% of pregnant women acquire a primary CMV infection. Of these, about 30% to 40% transmits infection to their fetuses.",
+                image: 'cmv_infection',
+                hint: "This common virus often goes unnoticed but can be serious for fetuses."
+            },
+            {
+                question: "A pregnant woman asks the nurse, \"I'm a big coffee drinker. Will the caffeine in my coffee hurt my baby?\" Which response by the nurse would be most appropriate?",
+                options: [
+                    "\"The caffeine in coffee has been linked to birth defects.\"",
+                    "\"Caffeine has been shown to restrict growth in the fetus.\"",
+                    "\"Caffeine is a stimulant and needs to be avoided completely.\"",
+                    "\"If you keep your intake to less than 200 mg/day, you should be okay.\""
+                ],
+                correct: 3,
+                rationale: "The effect of caffeine intake during pregnancy on fetal growth and development is still unclear. A recent study found that caffeine intake of no more than 200 mg/day during pregnancy does not affect pregnancy duration and the condition of the newborn. Birth defects have not been linked to caffeine consumption, but maternal coffee consumption decreases iron absorption and may increase the risk of anemia during pregnancy. It is not known if there is a correlation between high caffeine intake and miscarriage due to lack of sufficient studies.",
+                image: 'caffeine_pregnancy',
+                hint: "Moderate caffeine consumption is generally considered safe during pregnancy."
+            },
+            {
+                question: "A neonate born to a mother who was abusing heroin is exhibiting signs and symptoms of withdrawal. Which signs would the nurse assess? Select all that apply.",
+                options: [
+                    "low whimpering cry",
+                    "hypertonicity",
+                    "lethargy",
+                    "excessive sneezing",
+                    "overly vigorous sucking",
+                    "tremors"
+                ],
+                correct: 1,
+                rationale: "Signs and symptoms of withdrawal, or neonatal abstinence syndrome, include: irritability, hypertonicity, excessive and often high-pitched crying, vomiting, diarrhea, feeding disturbances, respiratory distress, disturbed sleeping, excessive sneezing and yawning, nasal stuffiness, diaphoresis, fever, poor sucking, tremors, and seizures.",
+                image: 'neonatal_withdrawal',
+                hint: "Look for signs of central nervous system and autonomic nervous system hyperactivity."
+            },
+            {
+                question: "A nurse has been invited to speak at a local high school about adolescent pregnancy. When developing the presentation, the nurse would incorporate information related to which aspects? Select all that apply.",
+                options: [
+                    "peer pressure to become sexually active",
+                    "rise in teen birth rates over the years.",
+                    "Asian Americans as having the highest teen birth rate",
+                    "loss of self-esteem as a major impact",
+                    "about half occurring within a year of first sexual intercourse"
+                ],
+                correct: 0,
+                rationale: "Adolescent pregnancy has emerged as one of the most significant social problems facing our society. Early pregnancies among adolescents have major health consequences for mothers and their infants. The latest estimates show that approximately 1 million teenagers become pregnant each year in the United States, accounting for 13% of all U.S. births, but the rates have been declining in the last several years. Teen birth rates in the United States have declined but remain high,especially among African American and Hispanic teenagers and adolescents in southern states. The most important impact lies in the psychosocial area as it contributes to a loss of self-esteem, a destruction of life projects, and the maintenance of the circle of poverty. Moreover, about half of all teen pregnancies occur within 6 months of first having sexual intercourse. About one in four teen mothers under age 18 have a second baby within 2 years after the birth of the first baby.",
+                image: 'adolescent_pregnancy',
+                hint: "Consider psychosocial factors and timing of sexual activity."
+            },
+            {
+                question: "A nurse is counseling a pregnant woman with rheumatoid arthritis about medications that can be used during pregnancy. The nurse would emphasize the need to avoid which medication at this time?",
+                options: [
+                    "hydroxychloroquine",
+                    "nonsteroidal anti-inflammatory drugs",
+                    "glucocorticoid",
+                    "methotrexate"
+                ],
+                correct: 3,
+                rationale: "Methotrexate is contraindicated during pregnancy. For rheumatoid arthritis, medications are limited to hydroxychloroquine, glucocorticoids, and NSAIDS.",
+                image: 'rheumatoid_arthritis',
+                hint: "This medication is a known teratogen and should be avoided in pregnancy."
+            },
+            {
+                question: "A nurse is preparing a teaching program for a group of pregnant women about preventing infections during pregnancy. When describing measures for preventing cytomegalovirus infection, which measure would the nurse include as a priority?",
+                options: [
+                    "frequent handwashing",
+                    "immunization",
+                    "prenatal screening",
+                    "antibody titer screening"
+                ],
+                correct: 0,
+                rationale: "Most women are asymptomatic and do not know they have been exposed to CMV. Prenatal screening for CMV infection is not routinely performed. Since there is no therapy that prevents or treats CMV infections, nurses are responsible for educating and supporting childbearing-age women at risk for CMV infection. Stressing the importance of good handwashing and use of sound hygiene practices can help to reduce transmission of the virus. There is no immunization for CMV. Antibody titer levels would be useful for identifying women at risk for rubella.",
+                image: 'handwashing',
+                hint: "Good hygiene is the primary prevention method for this common virus."
+            },
+            {
+                question: "A pregnant woman comes to the clinic for her first evaluation. The woman is screened for hepatitis B (HBV) and tests positive. The nurse would anticipate administering which agent?",
+                options: [
+                    "HBV immune globulin",
+                    "HBV vaccine",
+                    "acyclovir",
+                    "valacyclovir"
+                ],
+                correct: 0,
+                rationale: "If a woman tests positive for HBV, expect to administer HBV immune globulin. The newborn will also receive HBV vaccine within 12 hours of birth. Acyclovir or valacyclovir would be used to treat herpes simplex virus infection.",
+                image: 'hepatitis_b',
+                hint: "This provides passive immunity for the newborn."
+            },
+            {
+                question: "After teaching a pregnant woman with iron deficiency anemia about nutrition, the nurse determines that the teaching was successful when the woman identifies which foods as being good sources of iron in her diet? Select all that apply.",
+                options: [
+                    "dried fruits",
+                    "peanut butter",
+                    "meats",
+                    "milk",
+                    "white bread"
+                ],
+                correct: 0,
+                rationale: "Foods high in iron include meats, green leafy vegetables, legumes, dried fruits, whole grains, peanut butter, bean dip, whole-wheat fortified breads, and cereals.",
+                image: 'iron_foods',
+                hint: "Think about both heme and non-heme iron sources."
+            },
+            {
+                question: "A pregnant woman with gestational diabetes comes to the clinic for a fasting blood glucose level. When reviewing the results, the nurse determines that the woman is achieving good glucose control based on which result?",
+                options: [
+                    "88 mg/dL",
+                    "100 mg/dL",
+                    "110 mg/dL",
+                    "120 mg/dL"
+                ],
+                correct: 0,
+                rationale: "For a pregnant woman with diabetes, the ADA and ACOG recommend maintaining a fasting blood glucose level below 95 mg/dL, with postprandial levels below 140 mg/dL at 1 hour, below 120 mg/dL at 2 hours.",
+                image: 'glucose_control',
+                hint: "Pregnancy requires tighter glucose control than non-pregnant states."
+            },
+            {
+                question: "A nurse is conducting a program for pregnant women with gestational diabetes about reducing complications. The nurse determines that the teaching was successful when the group identifies which factor as being most important in helping to reduce complications associated with pregnancy and diabetes?",
+                options: [
+                    "stability of the woman's emotional and psychological status",
+                    "degree of blood glucose control achieved during the pregnancy",
+                    "reduction in retinopathy risk by frequent ophthalmologic evaluations",
+                    "control of blood urea nitrogen (BUN) levels for optimal kidney function"
+                ],
+                correct: 1,
+                rationale: "Therapeutic management for the woman with diabetes focuses on tight glucose control, thereby minimizing the risks to the mother, fetus, and neonate. The woman's emotional and psychological status is highly variable and may or may not affect the pregnancy. Evaluating for long-term diabetic complications such as retinopathy or nephropathy, as evidenced by laboratory testing such as BUN levels, is an important aspect of preconception care to ensure that the mother enters the pregnancy in an optimal state.",
+                image: 'glucose_control',
+                hint: "Tight glycemic control is the cornerstone of diabetic management in pregnancy."
+            },
+            {
+                question: "A nurse is providing care to several pregnant women at different weeks of gestation. The nurse would expect to screen for group B streptococcus infection in the client who is at:",
+                options: [
+                    "16 weeks' gestation.",
+                    "28 weeks' gestation.",
+                    "32 weeks' gestation.",
+                    "36 weeks' gestation."
+                ],
+                correct: 3,
+                rationale: "Pregnant women between 36 and 37 weeks' gestation should be universally screened for GBS infection during a prenatal visit and if positive, receive appropriate intrapartum antibiotic prophylaxis.",
+                image: 'gbs_screening',
+                hint: "Screening occurs late in pregnancy to guide intrapartum management."
+            },
+            {
+                question: "A woman with a history of systemic lupus erythematosus comes to the clinic for evaluation. The woman tells the nurse that she and her partner would like to have a baby but that they are afraid her lupus will be a problem. Which response would be most appropriate for the nurse to make?",
+                options: [
+                    "\"It's probably not a good idea for you to get pregnant since you have lupus.\"",
+                    "\"Be sure that your lupus is stable or in remission for 6 months before getting pregnant.\"",
+                    "\"Your lupus will not have any effect on your pregnancy whatsoever.\"",
+                    "\"If you get pregnant, we'll have to add quite a few medications to your normal treatment plan.\""
+                ],
+                correct: 1,
+                rationale: "The time at which the nurse comes in contact with the woman in her childbearing life cycle will determine the focus of the assessment. If the woman is considering pregnancy, it is recommended that she postpone conception until the disease has been stable or in remission for 6 months. Active disease at time of conception and history of renal disease increase the likelihood of a poor pregnancy outcome (Cunningham et al., 2018). In particular, if pregnancy is planned during periods of inactive or stable disease, the result is often giving birth to healthy full-term babies without increased risks of pregnancy complications. Nonetheless, pregnancies with most autoimmune diseases are still classified as high risk because of the potential for major complications. Preconception counseling should include the medical and obstetric risks of spontaneous abortion, stillbirth, fetal death, fetal growth restriction, preeclampsia, preterm labor, and neonatal death and the need for more frequent visits for monitoring the condition. Treatment of SLE in pregnancy is generally limited to NSAIDs (e.g., ibuprofen), prednisone, and an antimalarial agent, hydroxychloroquine. During pregnancy in the woman with SLE, the goal is to keep drug therapy to a minimum.",
+                image: 'lupus_pregnancy',
+                hint: "Disease stability before conception is crucial for optimal outcomes."
+            },
+            {
+                question: "A nurse is conducting a presentation for a group of pregnant women about measures to prevent toxoplasmosis. The nurse determines that additional teaching is needed when the group identifies which measure as preventive?",
+                options: [
+                    "washing raw fruits and vegetables before eating them",
+                    "cooking all meat to an internal temperature of 125° F (52° C)",
+                    "wearing gardening gloves when working in the soil",
+                    "avoiding contact with a cat's litter box"
+                ],
+                correct: 1,
+                rationale: "Meats should be cooked to an internal temperature of 160° F (71° C). Other measures to prevent toxoplasmosis include peeling or thoroughly washing all raw fruits and vegetables before eating them, wearing gardening gloves when in contact with outdoor soil, and avoiding the emptying or cleaning of a cat's litter box.",
+                image: 'toxoplasmosis',
+                hint: "Proper cooking temperatures are essential to kill the parasite."
+            },
+            {
+                question: "A pregnant client with iron-deficiency anemia is prescribed an iron supplement. After teaching the woman about using the supplement, the nurse determines that more teaching is needed based on which client statement?",
+                options: [
+                    "\"Taking the iron supplement with food will help with the side effects.\"",
+                    "\"I will need to avoid coffee and tea when I take this supplement.\"",
+                    "\"I will take the iron with milk instead of orange or grapefruit juice.\"",
+                    "\"If I happen to miss a dose, I will take it as soon as I remember.\""
+                ],
+                correct: 2,
+                rationale: "The pregnant client should take the iron supplement with vitamin C-containing fluids such as orange juice, which will promote absorption, rather than milk, which can inhibit iron absorption. Taking iron on an empty stomach improves its absorption, but many women cannot tolerate the gastrointestinal discomfort it causes. In such cases, the woman is advised to take it with meals. The woman also needs instruction about adverse effects, which are predominantly gastrointestinal and include gastric discomfort, nausea, vomiting, anorexia, diarrhea, metallic taste, and constipation. Taking the iron supplement with meals and increasing intake of fiber and fluids helps overcome the most common side effects. If the woman misses a dose, she should take a dose as soon as she remembers.",
+                image: 'iron_supplement',
+                hint: "Some beverages can interfere with iron absorption."
+            },
+            {
+                question: "A client in her first trimester comes to the clinic for an evaluation. Assessment reveals reports of fatigue, anorexia, and frequent upper respiratory infections. The client's skin is pale and the client is slightly tachycardic. The client also reports drinking about 6 cups of coffee on average each day. A diagnosis of iron-deficiency anemia is suspected. The client is scheduled for laboratory testing and the results are as follows: • Hemoglobin 11.5 g/dL (115 g/L) • Hematocrit 35% (0.35) • Serum iron 32 μg/dL (5.73 μmol/L) • Serum ferritin 90 ng/dL (90 μg/L). Which laboratory finding would the nurse correlate with the suspected diagnosis?",
+                options: [
+                    "Hemoglobin",
+                    "Hematocrit",
+                    "Serum iron level",
+                    "Serum ferritin level"
+                ],
+                correct: 3,
+                rationale: "Laboratory tests for iron-deficiency anemia usually reveal low hemoglobin (less than 11 g/dL or 110 g/L), low hematocrit (less than 35% or 0.35), low serum iron (less than 30 μg/dL or 5.37 μmol/L), microcytic and hypochromic cells, and low serum ferritin (less than 100 ng/dL or 100 μg/L). The client's hemoglobin, hematocrit, and serum iron levels are borderline low normal, but the client's serum ferritin is below 100 ng/dL (100 μg/L), helping to support the diagnosis.",
+                image: 'lab_results',
+                hint: "Ferritin reflects iron stores in the body."
+            },
+            {
+                question: "A young adult woman comes to the clinic for a routine check-up. During the visit, the woman who works in a day care facility tells the nurse that she and her partner are considering having a baby. \"We are concerned that I might be exposed to common childhood illnesses.\" The woman undergoes testing and finds out that she is not immune from chickenpox. Based on this information, which information would the nurse give to the client?",
+                options: [
+                    "\"You will need to be vaccinated now and wait at least 1 month before getting pregnant.\"",
+                    "\"It is very likely that you will need to quit your job if you do get pregnant.\"",
+                    "\"Because chickenpox is so rare nowadays, there is nothing to worry about.\"",
+                    "\"You will need to take a leave of absence during winter and spring months.\""
+                ],
+                correct: 0,
+                rationale: "Preconception counseling is important for preventing chickenpox (varicella). A major component of counseling involves determining the woman's varicella immunity. Vaccination is the cornerstone of prevention. The vaccine is administered if needed. Varicella vaccine is a live attenuated viral vaccine. It should be administered to all adolescents and adults 13 years of age and older who do not have evidence of varicella immunity. Therefore, the woman should be vaccinated now before she becomes pregnant and then wait at least 1 month before getting pregnant. The varicella vaccine is contraindicated for pregnant women because the effects of the vaccine on the fetus are unknown. There is no need for the woman to quit her job once she is immunized nor does she need to take a leave of abscence during the winter and spring months when the incidence is highest. Chickenpox does occur and is highly contagious. Maternal varicella can be transmitted to the fetus through the placenta, leading to congenital varicella syndrome if the mother is infected during the first half of pregnancy via an ascending aorta.",
+                image: 'varicella_vaccine',
+                hint: "Live vaccines should be given before pregnancy, not during."
+            },
+            {
+                question: "A nurse is obtaining a medication history from a pregnant client with a history of systemic lupus erythematosus (SLE). Which medication(s) would the nurse expect the woman to report to be currently using? Select all that apply.",
+                options: [
+                    "Ibuprofen",
+                    "Hydroxychloroquine",
+                    "Methotrexate",
+                    "Leflunomide",
+                    "Prednisone"
+                ],
+                correct: 0,
+                rationale: "Treatment of SLE in pregnancy is generally limited to NSAIDs like ibuprofen, prednisone, and an antimalarial agent, hydroxychloroquine. Methotrexate and leflunomide are used to treat rheumatoid arthritis but are contraindicated for use in pregnancy because of the potential for fetal toxicity.",
+                image: 'sle_medications',
+                hint: "Some medications used for autoimmune diseases are safe in pregnancy while others are not."
+            },
+            {
+                question: "The nurse reviews the medical record of a woman who has come to the clinic for an evaluation. The client has a history of mitral valve prolapse and is listed as risk class II. During the visit, the woman states, \"We want to have a baby, but I know I am at higher risk. But what is my risk, really?\" Which response by the nurse would be appropriate?",
+                options: [
+                    "\"If you do get pregnant, you will need to be seen by a cardiologist every other month for monitoring.\"",
+                    "\"Your risk during pregnancy is small, but you should see your cardiologist first before getting pregnant.\"",
+                    "\"Your heart disease would put too much strain on your heart if you were to get pregnant.\"",
+                    "\"Your pregnancy would be uneventful, but you would need specialized care for labor and birth.\""
+                ],
+                correct: 1,
+                rationale: "Typically, a woman with class I or II cardiac disease can go through a pregnancy without major complications. For class I disease, there is no detectable increased risk of maternal mortality and no increase or a mild increase in morbidity. For class II disease, there is a small increased risk of maternal mortality or moderate increase in morbidity and cardiac consultation should occur every trimester. It is best to have the woman see her cardiologist before becoming pregnant. A woman with class III disease needs frequent visits with the cardiac care team throughout pregnancy. There is a significantly increased risk of maternal mortality or severe morbidity and cardiologist consult should occur every other month with prenatal care and delivery occurring at an appropriate level hospital. A woman with class IV disease is typically advised to avoid pregnancy.",
+                image: 'cardiac_pregnancy',
+                hint: "Class II cardiac disease carries minimal to moderate risk in pregnancy."
+            },
+            {
+                question: "A pregnant woman with chronic hypertension is entering her second trimester. The nurse is providing anticipatory guidance to the woman about measures to promote a healthy outcome. The nurse determines that the teaching was successful based on which client statement(s)? Select all that apply.",
+                options: [
+                    "\"I will need to schedule follow-up appointments every 2 weeks until I reach 32 weeks' gestation.\"",
+                    "\"I should try to lie down and rest on my left side for about an hour each day.\"",
+                    "\"I will start doing daily counts of my baby's activity at about 24 weeks' gestation.\"",
+                    "\"I will need to have an ultrasound at each visit beginning at 28 weeks' gestation.\"",
+                    "\"I should take my blood pressure frequently at home and report any high readings.\""
+                ],
+                correct: 1,
+                rationale: "The woman with chronic hypertension will be seen more frequently (every 2 weeks until 28 weeks' gestation and then weekly until birth) to monitor her blood pressure and to assess for any signs of preeclampsia. At approximately 24 weeks' gestation, the woman will be instructed to document fetal movement. At this same time, serial ultrasounds will be prescribed to monitor fetal growth and amniotic fluid volume. The woman should also have daily periods of rest (1 hour) in the left lateral recumbent position to maximize placental perfusion and use home blood pressure monitoring devices frequently (daily checks would be preferred), reporting any elevations.",
+                image: 'hypertension_monitoring',
+                hint: "Consider both maternal and fetal monitoring strategies for chronic hypertension."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let selectedOption = null;
+        let score = 0;
+        let answers = Array(questions.length).fill(null);
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            document.getElementById('counter').textContent = `${currentQuestion + 1}/${questions.length}`;
+            
+            // Update progress bar
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Load image
+            const imageContainer = document.getElementById('imageContainer');
+            const conceptImage = document.getElementById('conceptImage');
+            if (question.image && medicalImages[question.image]) {
+                conceptImage.src = medicalImages[question.image];
+                imageContainer.style.display = 'flex';
+            } else {
+                imageContainer.style.display = 'none';
+            }
+            
+            // Load options
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.innerHTML = `
+                    <div class="option-letter">${String.fromCharCode(65 + index)}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                optionElement.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Reset feedback and rationale
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('rationale').className = 'rationale';
+            document.getElementById('hint').className = 'hint';
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = currentQuestion === questions.length - 1 ? 'Finish ➡️' : 'Next ➡️';
+            document.getElementById('nextBtn').disabled = answers[currentQuestion] === null;
+            
+            // Reset cancel button visibility
+            document.getElementById('cancelBtn').classList.remove('show');
+            
+            // If this question was already answered, show the answer
+            if (answers[currentQuestion] !== null) {
+                selectOption(answers[currentQuestion], true);
+            }
+        }
+
+        function selectOption(index, fromMemory = false) {
+            // If we're just loading a previously selected answer, don't process it as new
+            if (fromMemory) {
+                highlightSelectedOption(index);
+                showFeedback(index);
+                return;
+            }
+            
+            // If an option is already selected, do nothing (unless we're loading from memory)
+            if (selectedOption !== null && !fromMemory) return;
+            
+            selectedOption = index;
+            answers[currentQuestion] = index;
+            
+            highlightSelectedOption(index);
+            showFeedback(index);
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function cancelSelection() {
+            // Reset the selected option
+            selectedOption = null;
+            answers[currentQuestion] = null;
+            
+            // Remove highlighting from all options
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect', 'selected');
+            });
+            
+            // Hide feedback and rationale
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('rationale').classList.remove('show');
+            
+            // Hide the cancel button
+            document.getElementById('cancelBtn').classList.remove('show');
+            
+            // Disable next button until a new selection is made
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        function highlightSelectedOption(index) {
+            const options = document.querySelectorAll('.option');
+            const question = questions[currentQuestion];
+            
+            options.forEach((option, i) => {
+                option.classList.remove('correct', 'incorrect', 'selected');
+                
+                if (i === index) {
+                    option.classList.add('selected');
+                    
+                    if (i === question.correct) {
+                        option.classList.add('correct');
+                        if (!answers[currentQuestion]) score++;
+                        
+                        // Don't show cancel button for correct answers
+                        document.getElementById('cancelBtn').classList.remove('show');
+                    } else {
+                        option.classList.add('incorrect');
+                        // Also highlight the correct answer
+                        options[question.correct].classList.add('correct');
+                        
+                        // Show cancel button only for wrong answers
+                        document.getElementById('cancelBtn').classList.add('show');
+                    }
+                }
+            });
+        }
+
+        function showFeedback(index) {
+            const question = questions[currentQuestion];
+            const feedback = document.getElementById('feedback');
+            const feedbackIcon = document.getElementById('feedbackIcon');
+            const feedbackText = document.getElementById('feedbackText');
+            const rationale = document.getElementById('rationale');
+            const rationaleText = document.getElementById('rationaleText');
+            
+            if (index === question.correct) {
+                feedback.className = 'feedback correct';
+                feedbackIcon.textContent = '✅';
+                feedbackText.textContent = 'Correct! Well done.';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedbackIcon.textContent = '❌';
+                feedbackText.textContent = `Incorrect. The right answer is: ${String.fromCharCode(65 + question.correct)}`;
+            }
+            
+            feedback.style.display = 'flex';
+            rationaleText.textContent = question.rationale;
+            rationale.classList.add('show');
+        }
+
+        function showHint() {
+            const hint = document.getElementById('hint');
+            const hintText = document.getElementById('hintText');
+            const question = questions[currentQuestion];
+            
+            hintText.textContent = question.hint;
+            hint.classList.add('show');
+        }
+
+        function nextCard() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                selectedOption = null;
+                loadQuestion();
+            } else {
+                // Quiz finished - show results
+                alert(`Quiz completed! Your score: ${score}/${questions.length}`);
+                currentQuestion = 0;
+                selectedOption = null;
+                score = 0;
+                answers = Array(questions.length).fill(null);
+                loadQuestion();
+            }
+        }
+
+        function previousCard() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                selectedOption = answers[currentQuestion];
+                loadQuestion();
+            }
+        }
+
+        // Initialize the app
+        loadQuestion();
+    </script>
+</body>
+</html>
